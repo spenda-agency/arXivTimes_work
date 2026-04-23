@@ -13,6 +13,7 @@ import anthropic
 import requests
 
 SLACK_CHANNEL_ID = "C0AU65Z4TAL"  # #03y_arxivtimes
+ARTICLES_OUTPUT_PATH = os.environ.get("ARTICLES_OUTPUT_PATH", "/tmp/articles.json")
 
 SEARCH_QUERIES = [
     "AI artificial intelligence latest news today",
@@ -176,6 +177,16 @@ def post_to_slack(message: str) -> None:
     print(f"Message posted to #{SLACK_CHANNEL_ID} successfully.")
 
 
+def save_articles(articles: list[dict], path: str) -> None:
+    """後続ステップ（NotebookLM連携等）のために記事一覧をJSONで出力する。"""
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(articles, f, ensure_ascii=False, indent=2)
+        print(f"Saved {len(articles)} articles to {path}")
+    except Exception as e:
+        print(f"Warning: failed to save articles to {path}: {e}", file=sys.stderr)
+
+
 def main():
     print("Collecting latest news...")
     articles = collect_news()
@@ -185,6 +196,7 @@ def main():
     print("---\n" + message + "\n---")
 
     post_to_slack(message)
+    save_articles(articles, ARTICLES_OUTPUT_PATH)
     print("Done!")
 
 
