@@ -9,10 +9,12 @@ on:
 jobs:
   digest:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
 
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      ARTICLES_OUTPUT_PATH: ${{ github.workspace }}/articles.json
+      ARTICLES_INPUT_PATH: ${{ github.workspace }}/articles.json
 
     steps:
       - name: Checkout repository
@@ -31,3 +33,9 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         run: python scripts/daily_digest.py
+
+      - name: Generate NotebookLM audio overview
+        continue-on-error: true
+        env:
+          NOTEBOOKLM_AUTH_JSON: ${{ secrets.NOTEBOOKLM_AUTH_JSON }}
+        run: python scripts/notebooklm_digest.py
