@@ -34,8 +34,8 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         run: python scripts/daily_digest.py
 
-      - name: Generate NotebookLM audio overview
+      - name: Append articles to Google Sheets
         continue-on-error: true
         env:
-          NOTEBOOKLM_AUTH_JSON: ${{ secrets.NOTEBOOKLM_AUTH_JSON }}
-        run: python scripts/notebooklm_digest.py
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: python scripts/sheets_append.py
