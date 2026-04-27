@@ -21,7 +21,7 @@ MAX_RETRIES = 3
 
 SEARCH_QUERIES = [
     "AI artificial intelligence latest news today",
-    "マーケティング AI DX データ活用 最新ニュース",
+    "marketing AI DX data utilization latest news",
     "AI machine learning research breakthroughs today",
     "generative AI enterprise data analytics news",
 ]
@@ -33,7 +33,7 @@ Web検索結果から、直近24時間の重要記事を選定し、日本語で
 - 最大10件の記事を選定
 - AI、マーケティング、データ分析、DXの4分野をバランスよくカバー
 - 重複する内容の記事は除外
-- 日本語の記事も英語の記事も対象（タイトル・要約は日本語で記載）
+- 英語の記事のみを対象（日本語サイトは除外。タイトル・要約は日本語で記載）
 - 出力はJSON配列で返す（各要素: source, title, url, summary（3要素の配列）, detail）
 - source: 記事の発信元メディア・サイト名（例: TechCrunch, ITmedia, 日経XTECH, MIT Technology Review）
 - detail: 記事内容を日本語1文〜2文で200字以内にまとめた説明（必ず200字以下）
@@ -151,7 +151,10 @@ def format_slack_message(articles: list[dict]) -> str:
     jst = timezone(timedelta(hours=9))
     today = datetime.now(jst).strftime("%Y/%m/%d")
 
-    lines = [f":newspaper: *AI・マーケティング・データ・DX 最新ニュースまとめ*（{today}）\n"]
+    lines = [
+        f":newspaper: *AI・マーケティング・データ・DX 最新ニュースまとめ*（{today}）",
+        ":bar_chart: 過去ログ: <https://docs.google.com/spreadsheets/d/1ih5hFlS8kwGgcSP_cau8b0VmYcWtfVjP3pml5RrpRe4|スプレッドシートを開く>\n",
+    ]
 
     for i, article in enumerate(articles, 1):
         title = article.get("title", "No Title")
