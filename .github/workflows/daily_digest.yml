@@ -2,8 +2,8 @@ name: Daily AI/DX News Digest
 
 on:
   schedule:
-    # JST 04:00 = UTC 19:00 (前日)
-    - cron: '0 19 * * *'
+    # JST 03:00 = UTC 18:00 (前日)
+    - cron: '0 18 * * *'
   workflow_dispatch: # 手動実行用
 
 jobs:
