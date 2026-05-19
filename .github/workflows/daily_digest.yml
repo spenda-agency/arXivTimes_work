@@ -2,10 +2,8 @@ name: Daily AI/DX News Digest
 
 on:
   schedule:
-    # JST 03:00 = UTC 18:00 (前日)
-    # NOTE: 別リポジトリが同じスプレッドシート (1ih5hFlS8...RrpRe4) を別時刻に書くため、
-    # ここを動かす場合はその repo と衝突しないか確認すること。
-    - cron: '0 18 * * *'
+    # JST 04:00 = UTC 19:00 (前日)
+    - cron: '0 19 * * *'
   workflow_dispatch: # 手動実行用
 
 jobs:
