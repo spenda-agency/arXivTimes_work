@@ -71,6 +71,24 @@ def collect_news() -> list[dict]:
         max_retries=MAX_RETRIES,
     )
 
+    try:
+        client.models.list(limit=1)
+    except anthropic.AuthenticationError:
+        print(
+            "Error: ANTHROPIC_API_KEY authentication failed (401). "
+            "The key in GitHub Secrets is invalid or revoked. "
+            "Rotate it at https://console.anthropic.com/settings/keys "
+            "and update the GitHub Secret 'ANTHROPIC_API_KEY'.",
+            file=sys.stderr,
+        )
+        sys.exit(2)
+    except anthropic.APIStatusError as e:
+        print(
+            f"Error: Anthropic preflight failed: {type(e).__name__}: {e}",
+            file=sys.stderr,
+        )
+        sys.exit(2)
+
     jst = timezone(timedelta(hours=9))
     today = datetime.now(jst).strftime("%Y年%m月%d日")
 
