@@ -2,3 +2,4 @@ anthropic>=0.40.0
 requests>=2.31.0
 google-api-python-client>=2.100.0
 google-auth>=2.20.0
+google-cloud-bigquery>=3.20.0
