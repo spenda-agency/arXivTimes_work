@@ -1,0 +1,34 @@
+name: Keep Alive
+
+# GitHub Actions は 60 日プッシュ活動がないと scheduled workflow を
+# 自動的に無効化する (state: disabled_inactivity)。scheduled 実行自体は
+# 「活動」としてカウントされないため、月2回 (1日/15日) 空でないコミットを
+# push して inactivity タイマーをリセットする。
+on:
+  schedule:
+    - cron: '0 3 1,15 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update keepalive marker and push
+        run: |
+          set -eu
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          date -u +'%Y-%m-%dT%H:%M:%SZ' > .github/keepalive.txt
+          git add .github/keepalive.txt
+          if git diff --cached --quiet; then
+            echo "no change (unlikely)"
+            exit 0
+          fi
+          git commit -m "chore: keep-alive (reset scheduled-workflow inactivity timer)"
+          git push
